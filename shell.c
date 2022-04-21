@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #define DELIMITER " "
+#define prompt "myShell$"
 
 char* read_shell();
 char** tokenize(char*);
@@ -21,7 +22,7 @@ int main()
 
     do
     {
-       printf("$");
+       printf(prompt);
        line=read_shell();//Reading the shell command
        //printf("%s\n",line);
        tokenList=tokenize(line);
@@ -171,11 +172,15 @@ return 1;
 void executeCD(char** tokenList)
 {
     char* path=tokenList[1];
+    if (path==NULL)
+    chdir(getenv("HOME"));
+    else
+    {
     int chdirStatus=chdir(path);
     if (chdirStatus==-1)
     {
     printf( "Value of errno: %d\n", errno);
     printf("Error Message: %s\n", strerror(errno));
     exit(EXIT_FAILURE);
-    }
+    }}
 }
