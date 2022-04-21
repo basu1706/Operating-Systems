@@ -9,6 +9,7 @@
 char* read_shell();
 char** tokenize(char*);
 int execute(char**);
+void executeCD(char**);
 
 extern int errno ;
 
@@ -141,6 +142,12 @@ if (strcmp(tokenList[0],"exit")==0)
 {   //If the exit token is entered, exit  the program
     return 0;
 }
+if (strcmp(tokenList[0],"cd")==0)
+{
+    printf("Changing directories to %s\n",tokenList[1]);
+    executeCD(tokenList);
+    return 1;
+}
 pid=fork();//fork the parent process
 if (pid<0)
 {   //fork returns a pid<0 in cases of error
@@ -161,4 +168,14 @@ else
 return 1;
 }
 
-
+void executeCD(char** tokenList)
+{
+    char* path=tokenList[1];
+    int chdirStatus=chdir(path);
+    if (chdirStatus==-1)
+    {
+    printf( "Value of errno: %d\n", errno);
+    printf("Error Message: %s\n", strerror(errno));
+    exit(EXIT_FAILURE);
+    }
+}
